@@ -3,8 +3,8 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 
 # Get first url data
-input_url = input("Enter full newegg paged url: ")
-my_url = "https://www.newegg.com/Gaming-Desktops/SubCategory/ID-3742?Tid=897483"
+my_url = input("Enter full newegg url on 1st page: ")
+split_url = my_url.split("?")
 u_client = urlopen(my_url)
 page_html = u_client.read()
 u_client.close()
@@ -23,8 +23,8 @@ f.write(headers)
 
 # Loop through url pages and get product containers
 for page in range(1, 54):
-    paged_url = f"https://www.newegg.com/Gaming-Desktops/SubCategory/ID-3742/Page-{page}?Tid=897483"
-    uClient = urlopen(my_url)
+    paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
+    u_client = urlopen(paged_url)
     page_html = u_client.read()
     u_client.close()
     page_soup = soup(page_html, "html.parser")
