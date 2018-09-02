@@ -3,7 +3,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 
 # Get first url data, see if url has page listed
-my_url = input("Enter main newegg paged url: ")
+my_url = input("Enter newegg url(with a space after): ")
 u_client = urlopen(my_url)
 page_html = u_client.read()
 u_client.close()
@@ -35,9 +35,11 @@ for page in range(start, end):
     if my_url.split("?")[0][-7] == "/":
         split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-    elif "IsNodeId=1" in my_url:
-        split_url = [my_url.split("IsNodeId=1")[0] + "IsNodeId=1", my_url.split("IsNodeId=1")[1]]
-        paged_url = f"{split_url[0]}&Page={page}{split_url[1]}"
+    elif "IsNodeId=1&" in my_url:
+        paged_url = f"{my_url}&Page={page}"
+    elif "IsNodeId=1&bop" in my_url:
+        split_url = [my_url.split("PageSize")[0].split("Page=")[0] + "Page=", "PageSize" + my_url.split("PageSize")[1]]
+        paged_url = f"{split_url[0]}{page}{split_url[1]}"
     else:
         split_url = my_url.split("?")
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
