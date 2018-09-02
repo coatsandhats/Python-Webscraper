@@ -35,19 +35,19 @@ for page in range(start, end):
     if my_url.split("?")[0][-7] == "/":
         split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-        print("first")
+        print("first type")
     elif ("IsNodeId=1&N" in my_url) or (my_url[-9:] == "IsNodeId=1 ") or (my_url[-7] == 'P'):
-        split_url = my_url.split("&Page=")[0]
+        split_url = my_url.split("&Page=")[0][:-2]
         paged_url = f"{split_url}&Page={page}"
-        print("second")
+        print("second type")
     elif ("IsNodeId=1&bop" in my_url) or ("IsNodeId=1&p" in my_url):
         split_url = [my_url.split("PageSize")[0].split("Page=")[0] + "Page=", "PageSize" + my_url.split("PageSize")[1]]
         paged_url = f"{split_url[0]}{page}{split_url[1]}"
-        print("third")
+        print("third type")
     else:
         split_url = my_url.split("?")
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-        print("fourth")
+        print("fourth type")
     u_client = urlopen(paged_url)
     page_html = u_client.read()
     u_client.close()
