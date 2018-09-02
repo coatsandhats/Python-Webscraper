@@ -30,7 +30,8 @@ while True:
     if 1 < end <= max_pages:
         break
 
-# Loop through url pages and get product containers
+# Loop through url pages and get product containers.
+# (first type is paged listed default, second type is page listed variant.)
 for page in range(start, end+1):
     if my_url.split("?")[0][-7] == "/":
         split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
@@ -45,8 +46,7 @@ for page in range(start, end+1):
         paged_url = f"{split_url[0]}{page}{split_url[1]}"
         print(f"third type: page {page}")
     else:
-        split_url = my_url.split("?")
-        paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
+        paged_url = f"{my_url[:-1]}/Page-{page}"
         print(f"fourth type: page {page}")
     u_client = urlopen(paged_url)
     page_html = u_client.read()
