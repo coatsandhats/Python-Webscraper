@@ -35,7 +35,7 @@ for page in range(start, end):
     if my_url.split("?")[0][-7] == "/":
         split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-    elif my_url.split("IsNodeId=1"):
+    elif "IsNodeId=1" in my_url:
         split_url = [my_url.split("IsNodeId=1")[0] + "IsNodeId=1", my_url.split("IsNodeId=1")[1]]
         paged_url = f"{split_url[0]}&Page={page}{split_url[1]}"
     else:
