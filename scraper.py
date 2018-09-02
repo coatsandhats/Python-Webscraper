@@ -31,30 +31,30 @@ while True:
         break
 
 # Loop through url pages and get product containers
-for page in range(start, end):
+for page in range(start, end+1):
     if my_url.split("?")[0][-7] == "/":
         split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-        print("first type")
-    elif ("IsNodeId=1&N" in my_url) or (my_url[-9:] == "IsNodeId=1 ") or (my_url[-7] == 'P'):
+        print(f"first type: page {page}")
+    elif ("IsNodeId=1&N" in my_url) or (my_url[-9:] == "IsNodeId=1 ") or (my_url[-7] == 'P') or ("Submit=ENE&N" in my_url):
         split_url = my_url.split("&Page=")[0][:-2]
         paged_url = f"{split_url}&Page={page}"
-        print("second type")
+        print(f"second type: page {page}")
     elif ("IsNodeId=1&bop" in my_url) or ("IsNodeId=1&p" in my_url):
         split_url = [my_url.split("PageSize")[0].split("Page=")[0] + "Page=", "PageSize" + my_url.split("PageSize")[1]]
         paged_url = f"{split_url[0]}{page}{split_url[1]}"
-        print("third type")
+        print(f"third type: page {page}")
     else:
         split_url = my_url.split("?")
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-        print("fourth type")
+        print(f"fourth type: page {page}")
     u_client = urlopen(paged_url)
     page_html = u_client.read()
     u_client.close()
     page_soup = soup(page_html, "html.parser")
     containers = page_soup.find_all("div", {"class": "item-container"})
 
-# Loop through product containers
+    # Loop through product containers
     for container in containers:
         if not container.div.div.img:
             brand = "None"
