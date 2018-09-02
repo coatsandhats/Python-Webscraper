@@ -3,11 +3,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup as soup
 
 # Get first url data, see if url has page listed
-my_url = input("Enter full newegg paged url: ")
-if my_url.split("?")[0][-7] == "/":
-        split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
-else:
-    split_url = my_url.split("?")
+my_url = input("Enter main newegg paged url: ")
 u_client = urlopen(my_url)
 page_html = u_client.read()
 u_client.close()
@@ -16,7 +12,7 @@ page_soup = soup(page_html, "html.parser")
 # Set max pages
 nav_bar = page_soup.find_all("div", {"id": "page_NavigationBar"})
 btns = nav_bar[-1].find_all("div", {"class": "btn-group-cell"})
-max_pages = int(btns[9].button.text)
+max_pages = int(btns[-2].button.text)
 
 # Create csv file
 filename = input("Enter csv file name(no extension): ") + ".csv"
@@ -36,7 +32,15 @@ while True:
 
 # Loop through url pages and get product containers
 for page in range(start, end):
-    paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
+    if my_url.split("?")[0][-7] == "/":
+        split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
+        paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
+    elif my_url.split("IsNodeId=1"):
+        split_url = [my_url.split("IsNodeId=1")[0] + "IsNodeId=1", my_url.split("IsNodeId=1")[1]]
+        paged_url = f"{split_url[0]}&Page={page}{split_url[1]}"
+    else:
+        split_url = my_url.split("?")
+        paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
     u_client = urlopen(paged_url)
     page_html = u_client.read()
     u_client.close()
@@ -50,7 +54,7 @@ for page in range(start, end):
         shipping_container = container.find_all("li", {"class": "price-ship"})
         shipping = shipping_container[0].text.strip()
         # fix for csv github quotes
-        format_product_name = (product_name.replace(',', '|')).replace('"', "")
+        format_product_name = (product_name.replace(',', '|')).replace('"', "inch")
         f.write(f"{brand.replace(',', '|')},{format_product_name},{shipping.replace(',', '|')}\n")
 
 f.close()
