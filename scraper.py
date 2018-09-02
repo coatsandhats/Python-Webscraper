@@ -49,6 +49,8 @@ for page in range(start, end):
         product_name = container.a.img["alt"]
         shipping_container = container.find_all("li", {"class": "price-ship"})
         shipping = shipping_container[0].text.strip()
-        f.write(f"{brand.replace(',', '|')},{product_name.replace(',', '|')},{shipping.replace(',', '|')}\n")
+        # fix for csv github quotes
+        format_product_name = (product_name.replace(',', '|')).replace('"', "")
+        f.write(f"{brand.replace(',', '|')},{format_product_name},{shipping.replace(',', '|')}\n")
 
 f.close()
