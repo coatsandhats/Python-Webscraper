@@ -15,7 +15,7 @@ btns = nav_bar[-1].find_all("div", {"class": "btn-group-cell"})
 max_pages = int(btns[-2].button.text)
 
 # Create csv file
-filename = input("Enter csv file name(no extension): ") + ".csv"
+filename = input("Enter csv file name: ").split('.')[0] + ".csv"
 f = open(filename, "w")
 headers = "brand, product_name, price, shipping\n"
 f.write(headers)
@@ -36,18 +36,18 @@ for page in range(start, end+1):
     if my_url.split("?")[0][-7] == "/":
         split_url = [my_url.split("?")[0].split("/P")[0], my_url.split("?")[1]]
         paged_url = f"{split_url[0]}/Page-{page}?{split_url[1]}"
-        print(f"first type: page {page}")
+        print(f"first type: {paged_url}")
     elif ("IsNodeId=1&N" in my_url) or (my_url[-9:] == "IsNodeId=1 ") or (my_url[-7] == 'P') or ("Submit=ENE&N" in my_url):
         split_url = my_url.split("&Page=")[0][:-2]
         paged_url = f"{split_url}&Page={page}"
-        print(f"second type: page {page}")
+        print(f"second type: {paged_url}")
     elif ("IsNodeId=1&bop" in my_url) or ("IsNodeId=1&p" in my_url):
         split_url = [my_url.split("PageSize")[0].split("Page=")[0] + "Page=", "PageSize" + my_url.split("PageSize")[1]]
         paged_url = f"{split_url[0]}{page}{split_url[1]}"
-        print(f"third type: page {page}")
+        print(f"third type: {paged_url}")
     else:
         paged_url = f"{my_url[:-1]}/Page-{page}"
-        print(f"fourth type: page {page}")
+        print(f"fourth type: {paged_url}")
     u_client = urlopen(paged_url)
     page_html = u_client.read()
     u_client.close()
